@@ -148,6 +148,25 @@ class ScalaModuleSpec extends WordSpec with Matchers {
       val func = injector.instance[(=> Unit) => String]
       func shouldEqual foo
     }
+
+
+    //Regression test for #43 (which hasn't been fixed yet)
+    "allow binding with mixins" ignore {
+      val a = new A {}
+      val ad = new A with D {}
+
+      val module = new AbstractModule with ScalaModule {
+          override def configure() {
+              bind[A].toInstance(a)
+              bind[A with D].toInstance(ad)
+          }
+      }
+
+      import net.codingwell.scalaguice.InjectorExtensions._
+      val injector = Guice.createInjector(module)
+      (injector.instance[A]) shouldEqual a
+      injector.instance[A with D] shouldEqual ad
+    }
   }
 
 }

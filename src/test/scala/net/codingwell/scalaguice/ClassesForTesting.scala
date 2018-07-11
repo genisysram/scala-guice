@@ -81,3 +81,5 @@ class SayHi extends Say {
 class AOPI extends MethodInterceptor {
   def invoke(invocation: MethodInvocation): AnyRef = s"""Hi ${invocation.proceed().toString}"""
 }
+
+trait D

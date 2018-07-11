@@ -76,7 +76,7 @@ private [scalaguice] object TypeConversions {
         val mappedLowerBounds = lowerBounds.map(scalaTypeToJavaType).toArray
         new WildcardTypeImpl(mappedUpperBounds, mappedLowerBounds)
       }
-      case _ => throw new UnsupportedOperationException(s"Could not convert scalaType $scalaType to a javaType")
+      case _ => throw new UnsupportedOperationException(s"Could not convert scalaType $scalaType to a javaType: " + scalaType.dealias.getClass.getName)
     }
   }
 
