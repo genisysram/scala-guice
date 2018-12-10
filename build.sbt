@@ -14,28 +14,27 @@ useGpg := true
 
 libraryDependencies ++= Seq(
   "com.google.inject" % "guice" % "4.2.2",
-  "com.google.guava" % "guava" % "23.6-android",
+  "com.google.guava" % "guava" % "25.1-android",
   "org.scala-lang" % "scala-reflect" % scalaVersion.value
 )
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+libraryDependencies += { if(scalaVersion.value.startsWith("2.13.")) "org.scalatest" %% "scalatest" % "3.0.6-SNAP5" % "test"
+  else "org.scalatest" %% "scalatest" % "3.0.1" % "test" }
 
-libraryDependencies += "com.google.code.findbugs" % "jsr305" % "1.3.9" % "compile"
+libraryDependencies += "com.google.code.findbugs" % "jsr305" % "3.0.2" % "compile"
 
 autoAPIMappings := true
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.12"
 
-crossScalaVersions := Seq(/*"2.10.7", If no one protests we can update code to be for 2.11+ */"2.11.12", "2.12.7")
-
-testListeners <<= target.map(t => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath)))
+crossScalaVersions := Seq(/*"2.10.7", If no one protests we can update code to be for 2.11+ */"2.11.12", "2.12.7"/*, "2.13.0-M5"*/)
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-feature")
 
-publishTo <<= version { (v: String) =>
+publishTo := {
   val nexus = "https://oss.sonatype.org/"
-  if (v.trim.endsWith("SNAPSHOT"))
-    Some("snapshots" at nexus + "content/repositories/snapshots")
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots") 
   else
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
 }
