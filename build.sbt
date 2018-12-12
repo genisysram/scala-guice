@@ -4,13 +4,11 @@ description := "Scala syntax for Guice"
 
 organization := "net.codingwell"
 
-version := "4.2.1"
+version := "4.2.2"
 
 licenses := Seq("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 
 homepage := Some(url("https://github.com/codingwell/scala-guice"))
-
-useGpg := true
 
 libraryDependencies ++= Seq(
   "com.google.inject" % "guice" % "4.2.2",
