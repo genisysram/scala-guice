@@ -73,7 +73,7 @@ trait InternalModule[B <: Binder] {
 
   protected[this] def bind[T: TypeTag] = new BindingBuilder[T]
 
-  protected[this] def bindInterceptor[I <: MethodInterceptor : Manifest](classMatcher: Matcher[_ >: Class[_]] = Matchers.any(), methodMatcher: Matcher[_ >: AnnotatedElement]) {
+  protected[this] def bindInterceptor[I <: MethodInterceptor : Manifest](classMatcher: Matcher[_ >: Class[_]] = Matchers.any(), methodMatcher: Matcher[_ >: AnnotatedElement]): Unit = {
     val myBinder = binderAccess
     val interceptor = manifest[I].runtimeClass.newInstance.asInstanceOf[MethodInterceptor]
     myBinder.requestInjection(interceptor)
