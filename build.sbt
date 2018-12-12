@@ -25,7 +25,7 @@ autoAPIMappings := true
 
 scalaVersion := "2.11.12"
 
-crossScalaVersions := Seq(/*"2.10.7", If no one protests we can update code to be for 2.11+ */"2.11.12", "2.12.7"/*, "2.13.0-M5"*/)
+crossScalaVersions := Seq(/*"2.10.7", If no one protests we can update code to be for 2.11+ */"2.11.12", "2.12.7", "2.13.0-M5")
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-feature")
 

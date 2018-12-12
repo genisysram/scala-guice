@@ -356,7 +356,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
     }
   }
 
-  private def validate[K, V](map: im.Map[K, V], expected: (K, V)*): Unit = {
+  private def validate[K, V](map: PartialFunction[K, V] with Iterable[(K, V)], expected: (K, V)*): Unit = {
     map should have size expected.length
     for ((k, v) <- expected) {
       map(k) should equal(v)

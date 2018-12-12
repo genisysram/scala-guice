@@ -22,7 +22,7 @@ import com.google.inject.spi._
 
 import java.util.{Set => JSet}
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.collection.{ immutable => im }
 
 /**
@@ -38,7 +38,7 @@ class SetProvider[T] (val source:Key[JSet[T]]) extends ProviderWithDependencies[
   @Inject() var injector:Injector = null
 
   def get():im.Set[T] = {
-    asScalaSet( injector.getInstance( source ) ).toSet[T]
+    injector.getInstance( source ).asScala.toSet[T]
   }
 
   def getDependencies = {

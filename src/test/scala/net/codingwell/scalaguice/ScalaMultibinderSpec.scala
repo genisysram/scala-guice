@@ -306,7 +306,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
     }
   }
 
-  private def validate[T](set: Set[T], expected: T*) {
+  private def validate[T](set: Set[T], expected: T*): Unit = {
     set should have size expected.length
     for (e <- expected) {
       set should contain(e)

@@ -88,7 +88,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "allow use provider form javax.inject.Provider" in {
       val module = new AbstractModule with ScalaModule {
-        override def configure() {
+        override def configure(): Unit = {
           bind[Foo].toProvider[FooProviderWithJavax]
         }
       }
@@ -156,7 +156,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
       val ad = new A with D {}
 
       val module = new AbstractModule with ScalaModule {
-          override def configure() {
+          override def configure(): Unit = {
               bind[A].toInstance(a)
               bind[A with D].toInstance(ad)
           }

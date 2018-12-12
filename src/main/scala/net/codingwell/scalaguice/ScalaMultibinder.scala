@@ -194,7 +194,7 @@ object ScalaMultibinder {
       parent
     }
 
-    def configure(binder: Binder) {
+    def configure(binder: Binder): Unit = {
       binder.bind(setKey).toProvider(new SetProvider(key.ofType(wrap[JSet].around(key.getTypeLiteral))))
     }
 

@@ -22,7 +22,7 @@ import com.google.common.collect.ImmutableSet
 import com.google.inject.spi.{Dependency, ProviderWithDependencies}
 import com.google.inject.{Inject, Injector, Key}
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.collection.{immutable => im}
 
 /**
@@ -38,7 +38,7 @@ class MapProvider[K, V](source: Key[JMap[K, V]]) extends ProviderWithDependencie
 
   override def get(): im.Map[K, V] = {
     val map = injector.getInstance(source)
-    mapAsScalaMap(map).toMap[K, V]
+    map.asScala.toMap[K, V]
   }
 
   override def getDependencies: util.Set[Dependency[_]] = {
@@ -59,7 +59,7 @@ class MapOfKToSetOfVProvider[K, V](source: Key[JMap[K, JSet[V]]]) extends Provid
 
   override def get(): im.Map[K, im.Set[V]] = {
     val map = injector.getInstance(source)
-    mapAsScalaMap(map).mapValues(s => asScalaSet(s).toSet[V]).toMap[K, im.Set[V]]
+    map.asScala.mapValues(s => s.asScala.toSet[V]).toMap[K, im.Set[V]]
   }
 
   override def getDependencies: util.Set[Dependency[_]] = {
