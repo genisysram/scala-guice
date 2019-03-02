@@ -23,19 +23,18 @@ import com.google.inject.{Key, TypeLiteral}
 
 import scala.language.higherKinds
 import scala.reflect.{ClassTag, classTag}
-import scala.reflect.runtime.universe.{TypeTag, runtimeMirror, typeOf}
+import scala.reflect.runtime.universe.{TypeTag, typeOf}
 
 
 package object scalaguice {
-  private val mirror = runtimeMirror(getClass.getClassLoader)
 
   /**
    * Create a com.google.inject.TypeLiteral from a [[scala.reflect.Manifest]].
    * Subtypes of [[scala.AnyVal]] will be converted to their corresponding
    * Java wrapper classes.
    */
-  def typeLiteral[T: TypeTag]: TypeLiteral[T] = {
-    val javaType = TypeConversions.scalaTypeToJavaType(typeOf[T])
+  def typeLiteral[T](implicit tt: TypeTag[T]): TypeLiteral[T] = {
+    val javaType = TypeConversions.scalaTypeToJavaType(typeOf[T], tt.mirror)
     TypeLiteral.get(javaType).asInstanceOf[TypeLiteral[T]]
   }
 

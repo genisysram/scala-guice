@@ -13,7 +13,6 @@ import scala.reflect.runtime.universe.{Type => ScalaType, WildcardType => ScalaW
   * Copyright (C) 22/04/2018 - REstore NV
   */
 private [scalaguice] object TypeConversions {
-  private val mirror = runtimeMirror(getClass.getClassLoader)
   private val anyType = typeOf[Any]
 
   object ArrayType {
@@ -57,30 +56,30 @@ private [scalaguice] object TypeConversions {
 
   }
 
-  def scalaTypeToJavaType(scalaType: ScalaType): JavaType = {
+  def scalaTypeToJavaType(scalaType: ScalaType, mirror: Mirror): JavaType = {
     scalaType.dealias match {
       case `anyType` => classOf[java.lang.Object]
-      case ExistentialType(symbols, underlying) => scalaTypeToJavaType(underlying)
-      case ArrayType(argType) => arrayOf(scalaTypeToJavaType(argType))
+      case ExistentialType(symbols, underlying) => scalaTypeToJavaType(underlying, mirror)
+      case ArrayType(argType) => arrayOf(scalaTypeToJavaType(argType, mirror))
       case ClassType(symbol, args) => {
         val rawType = mirror.runtimeClass(symbol)
-        val ownerType = findOwnerOf(symbol)
-        args.map(scalaTypeToJavaType) match {
+        val ownerType = findOwnerOf(symbol, mirror)
+        args.map(arg => scalaTypeToJavaType(arg, mirror)) match {
           case Nil => toWrapper(rawType)
           case mappedArgs if ownerType.nonEmpty => newParameterizedTypeWithOwner(ownerType.get, rawType, mappedArgs:_*)
           case mappedArgs => newParameterizedType(rawType, mappedArgs:_*)
         }
       }
       case WildcardType(lowerBounds, upperBounds) => {
-        val mappedUpperBounds = upperBounds.map(scalaTypeToJavaType).toArray
-        val mappedLowerBounds = lowerBounds.map(scalaTypeToJavaType).toArray
+        val mappedUpperBounds = upperBounds.map(bound => scalaTypeToJavaType(bound, mirror)).toArray
+        val mappedLowerBounds = lowerBounds.map(bound => scalaTypeToJavaType(bound, mirror)).toArray
         new WildcardTypeImpl(mappedUpperBounds, mappedLowerBounds)
       }
       case _ => throw new UnsupportedOperationException(s"Could not convert scalaType $scalaType to a javaType: " + scalaType.dealias.getClass.getName)
     }
   }
 
-  private def findOwnerOf(symbol: universe.ClassSymbol): Option[JavaType] = {
+  private def findOwnerOf(symbol: universe.ClassSymbol, mirror: Mirror): Option[JavaType] = {
     val owner = symbol.owner
 
     if (!owner.isPackage && (owner.isModuleClass && owner.owner.isPackage)) { //workaround for when owner is a top level object
