@@ -1,3 +1,27 @@
+4.2.3
+-----
+2019-03-02
+
+* Fix issue with binding to types in different classloaders
+
+4.2.2
+-----
+
+* Prep for Scala 2.13
+* Guice 4.2.2
+
+4.2.1
+-----
+2018-05-24
+
+* Better support for wildcard types
+
+4.2.0
+-----
+2018-03-11
+
+* Guice 4.2
+
 4.1.1
 -----
 2017-11-14
