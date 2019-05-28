@@ -21,6 +21,7 @@ import com.google.inject.{AbstractModule, Guice}
 import net.codingwell.scalaguice.InjectorExtensions._
 import net.codingwell.scalaguice.KeyExtensions._
 import org.scalatest.{Matchers, WordSpec}
+import scala.reflect.runtime.universe.TypeTag
 
 class InjectorExtensionsSpec extends WordSpec with Matchers {
 
@@ -83,8 +84,8 @@ class InjectorExtensionsSpec extends WordSpec with Matchers {
       injector.existingBinding[A](named("foo")) should not be defined
     }
 
-    def keyExistsFn[T: Manifest] = typeLiteral[T].toKey
-    def keyMissingFn[T: Manifest] = typeLiteral[T].annotatedWithName("foo")
+    def keyExistsFn[T: TypeTag] = typeLiteral[T].toKey
+    def keyMissingFn[T: TypeTag] = typeLiteral[T].annotatedWithName("foo")
 
     "allow existing bindings to be retrieved by key optionally" in {
       val Some(binding) = injector.existingBinding[A](keyExistsFn[A])

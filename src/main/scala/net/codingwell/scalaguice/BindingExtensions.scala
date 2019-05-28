@@ -19,6 +19,7 @@ import com.google.inject.Binder
 import com.google.inject.binder._
 import com.google.inject.name.Names
 import java.lang.annotation.{Annotation => JAnnotation}
+import scala.reflect.ClassTag
 import scala.reflect.runtime.universe.TypeTag
 
 import javax.inject.Provider
@@ -50,26 +51,26 @@ object BindingExtensions {
   }
 
   implicit class ScalaScopedBindingBuilder(b: ScopedBindingBuilder) {
-    def inType[TAnn <: JAnnotation : Manifest]() = b in cls[TAnn]
+    def inType[TAnn <: JAnnotation : ClassTag]() = b in cls[TAnn]
   }
 
   implicit class ScalaLinkedBindingBuilder[T](b: LinkedBindingBuilder[T]) {
     def toType[TImpl <: T : TypeTag] = b to typeLiteral[TImpl]
 
-    def toProviderType[TProvider <: Provider[_ <: T] : Manifest] = b toProvider cls[TProvider]
+    def toProviderType[TProvider <: Provider[_ <: T] : ClassTag] = b toProvider cls[TProvider]
   }
 
   implicit class ScalaAnnotatedBindingBuilder[T](b: AnnotatedBindingBuilder[T]) {
-    def annotatedWithType[TAnn <: JAnnotation : Manifest] = b annotatedWith cls[TAnn]
+    def annotatedWithType[TAnn <: JAnnotation : ClassTag] = b annotatedWith cls[TAnn]
   }
 
   implicit class ScalaAnnotatedConstantBindingBuilder(b: AnnotatedConstantBindingBuilder) {
-    def annotatedWithType[TAnn <: JAnnotation : Manifest] = b annotatedWith cls[TAnn]
+    def annotatedWithType[TAnn <: JAnnotation : ClassTag] = b annotatedWith cls[TAnn]
     def annotatedWithName(name: String) = b annotatedWith Names.named(name)
   }
 
   implicit class ScalaConstantBindingBuilder(b: ConstantBindingBuilder) {
-    def to[T: Manifest]() = b to cls[T]
+    def to[T: ClassTag]() = b to cls[T]
   }
 }
 

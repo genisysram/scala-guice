@@ -29,7 +29,7 @@ import scala.reflect.runtime.universe.{TypeTag, typeOf}
 package object scalaguice {
 
   /**
-   * Create a com.google.inject.TypeLiteral from a [[scala.reflect.Manifest]].
+   * Create a [[com.google.inject.TypeLiteral]] from a [[scala.reflect.runtime.universe.TypeTag]].
    * Subtypes of [[scala.AnyVal]] will be converted to their corresponding
    * Java wrapper classes.
    */

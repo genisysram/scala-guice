@@ -19,9 +19,10 @@ import binder._
 import com.google.inject.matcher.{Matcher, Matchers}
 import com.google.inject.{PrivateModule, PrivateBinder, Binder, Scope, AbstractModule}
 import java.lang.annotation.Annotation
-import java.lang.reflect.{AnnotatedElement, Method}
+import java.lang.reflect.AnnotatedElement
 import javax.inject.Provider
 import org.aopalliance.intercept.MethodInterceptor
+import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
 
 /**
@@ -73,21 +74,21 @@ trait InternalModule[B <: Binder] {
 
   protected[this] def bind[T: TypeTag] = new BindingBuilder[T]
 
-  protected[this] def bindInterceptor[I <: MethodInterceptor : Manifest](classMatcher: Matcher[_ >: Class[_]] = Matchers.any(), methodMatcher: Matcher[_ >: AnnotatedElement]): Unit = {
+  protected[this] def bindInterceptor[I <: MethodInterceptor : ClassTag](classMatcher: Matcher[_ >: Class[_]] = Matchers.any(), methodMatcher: Matcher[_ >: AnnotatedElement]): Unit = {
     val myBinder = binderAccess
-    val interceptor = manifest[I].runtimeClass.newInstance.asInstanceOf[MethodInterceptor]
+    val interceptor = implicitly[ClassTag[I]].runtimeClass.newInstance.asInstanceOf[MethodInterceptor]
     myBinder.requestInjection(interceptor)
     myBinder.bindInterceptor(classMatcher, methodMatcher, interceptor)
   }
 
-  protected[this] def annotatedWith[A <: Annotation : Manifest]: Matcher[AnnotatedElement] = {
+  protected[this] def annotatedWith[A <: Annotation : ClassTag]: Matcher[AnnotatedElement] = {
     Matchers.annotatedWith(cls[A])
   }
 
-  protected[this] def bindScope[T <: Annotation : Manifest](scope: Scope) = binderAccess.bindScope(cls[T], scope)
-  protected[this] def requestStaticInjection[T: Manifest](): Unit = binderAccess.requestStaticInjection(cls[T])
-  protected[this] def getProvider[T: Manifest] = binderAccess.getProvider(cls[T])
-  protected[this] def getMembersInjector[T: Manifest] = binderAccess.getMembersInjector(typeLiteral[T])
+  protected[this] def bindScope[T <: Annotation : ClassTag](scope: Scope) = binderAccess.bindScope(cls[T], scope)
+  protected[this] def requestStaticInjection[T: ClassTag](): Unit = binderAccess.requestStaticInjection(cls[T])
+  protected[this] def getProvider[T: ClassTag] = binderAccess.getProvider(cls[T])
+  protected[this] def getMembersInjector[T: TypeTag] = binderAccess.getMembersInjector(typeLiteral[T])
 }
 
 trait ScalaModule extends AbstractModule with InternalModule[Binder] {
@@ -109,12 +110,12 @@ trait ScalaPrivateModule extends PrivateModule with InternalModule[PrivateBinder
 
   protected[this] def binderAccess = super.binder.withSource(filterTrace((new Throwable).getStackTrace())) // should not need super
 
-  class ElementBuilder[T: Manifest] extends ScalaAnnotatedElementBuilder[T] {
+  class ElementBuilder[T: TypeTag] extends ScalaAnnotatedElementBuilder[T] {
     val myBinder = binderAccess
     val self = myBinder.expose(typeLiteral[T])
   }
 
-  protected[this] def expose[T: Manifest] = new ElementBuilder[T]
+  protected[this] def expose[T: TypeTag] = new ElementBuilder[T]
 }
 
 object ScalaModule {
@@ -146,26 +147,26 @@ object ScalaModule {
   }
 
   trait ScalaScopedBindingBuilder extends ScopedBindingBuilderProxy {
-    def in[TAnn <: JAnnotation : Manifest]() = self in cls[TAnn]
+    def in[TAnn <: JAnnotation : ClassTag]() = self in cls[TAnn]
   }
 
   trait ScalaLinkedBindingBuilder[T] extends ScalaScopedBindingBuilder with LinkedBindingBuilderProxy[T] { outer =>
-    def to[TImpl <: T : Manifest] = new ScalaScopedBindingBuilder {
+    def to[TImpl <: T : TypeTag] = new ScalaScopedBindingBuilder {
       val self = outer.self to typeLiteral[TImpl]
     }
 
-    def toProvider[TProvider <: Provider[_ <: T] : Manifest] = new ScalaScopedBindingBuilder {
+    def toProvider[TProvider <: Provider[_ <: T] : TypeTag] = new ScalaScopedBindingBuilder {
       val self = outer.self toProvider typeLiteral[TProvider]
     }
   }
 
   trait ScalaAnnotatedBindingBuilder[T] extends ScalaLinkedBindingBuilder[T] with AnnotatedBindingBuilderProxy[T] { outer =>
-    def annotatedWith[TAnn <: JAnnotation : Manifest] = new ScalaLinkedBindingBuilder[T] {
+    def annotatedWith[TAnn <: JAnnotation : ClassTag] = new ScalaLinkedBindingBuilder[T] {
       val self = outer.self annotatedWith cls[TAnn]
     }
   }
 
   trait ScalaAnnotatedElementBuilder[T] extends AnnotatedElementBuilderProxy[T] {
-    def annotatedWith[TAnn <: JAnnotation : Manifest]() = self annotatedWith cls[TAnn]
+    def annotatedWith[TAnn <: JAnnotation : ClassTag]() = self annotatedWith cls[TAnn]
   }
 }
