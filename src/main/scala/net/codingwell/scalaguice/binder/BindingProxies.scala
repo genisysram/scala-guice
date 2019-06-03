@@ -16,6 +16,8 @@
 package net.codingwell.scalaguice
 package binder
 
+import scala.language.postfixOps
+
 import com.google.inject._
 import com.google.inject.binder._
 import java.lang.annotation.{Annotation => JAnnotation}
@@ -31,7 +33,7 @@ trait ScopedBindingBuilderProxy extends ScopedBindingBuilder
 
   override def self: ScopedBindingBuilder
 
-  def asEagerSingleton() = self asEagerSingleton()
+  def asEagerSingleton() = self asEagerSingleton
   def in(scope: Scope) = self in scope
   def in(scopeAnnotation: Class[_ <: JAnnotation]) = self in scopeAnnotation
 }

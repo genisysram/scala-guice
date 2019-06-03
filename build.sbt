@@ -4,7 +4,7 @@ description := "Scala syntax for Guice"
 
 organization := "net.codingwell"
 
-version := "4.2.3"
+version := "4.2.4"
 
 licenses := Seq("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 
@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "org.scala-lang" % "scala-reflect" % scalaVersion.value
 )
 
-libraryDependencies += { if(scalaVersion.value.startsWith("2.13.")) "org.scalatest" %% "scalatest" % "3.0.6-SNAP5" % "test"
+libraryDependencies += { if(scalaVersion.value.startsWith("2.13.")) "org.scalatest" %% "scalatest" % "3.1.0-SNAP12" % "test"
   else "org.scalatest" %% "scalatest" % "3.0.1" % "test" }
 
 libraryDependencies += "com.google.code.findbugs" % "jsr305" % "3.0.2" % "compile"
@@ -25,7 +25,7 @@ autoAPIMappings := true
 
 scalaVersion := "2.11.12"
 
-crossScalaVersions := Seq(/*"2.10.7", If no one protests we can update code to be for 2.11+ */"2.11.12", "2.12.7", "2.13.0-M5")
+crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.0-RC3")
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-feature")
 
