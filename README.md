@@ -9,25 +9,25 @@ Getting Started
 ---------------
 
 ### Add dependency
-We currently support Scala `2.11, 2.12`
+We currently support Scala `2.11, 2.12, 2.13`
 
 ##### maven:
 ```xml
 <dependency>
     <groupId>net.codingwell</groupId>
-    <artifactId>scala-guice_2.12</artifactId>
-    <version>4.2.3</version>
+    <artifactId>scala-guice_2.13</artifactId>
+    <version>4.2.5</version>
 </dependency>
 ```
 
 ##### sbt:
 ```scala
-"net.codingwell" %% "scala-guice" % "4.2.3"
+"net.codingwell" %% "scala-guice" % "4.2.5"
 ```
 
 ##### gradle:
 ```groovy
-'net.codingwell:scala-guice_2.12:4.2.3'
+'net.codingwell:scala-guice_2.13:4.2.5'
 ```
 
 ### Mixin
