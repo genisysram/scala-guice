@@ -6,8 +6,7 @@ import com.google.inject.internal.MoreTypes.WildcardTypeImpl
 import com.google.inject.util.Types._
 
 import scala.reflect.runtime.universe
-import scala.reflect.runtime.universe._
-import scala.reflect.runtime.universe.{Type => ScalaType, WildcardType => ScalaWildCardType}
+import scala.reflect.runtime.universe.{Type => ScalaType, _}
 
 /**
   * Copyright (C) 22/04/2018 - REstore NV
@@ -74,6 +73,14 @@ private [scalaguice] object TypeConversions {
         val mappedUpperBounds = upperBounds.map(bound => scalaTypeToJavaType(bound, mirror)).toArray
         val mappedLowerBounds = lowerBounds.map(bound => scalaTypeToJavaType(bound, mirror)).toArray
         new WildcardTypeImpl(mappedUpperBounds, mappedLowerBounds)
+      }
+      case SingleType(_, symbol) if symbol.isModule => {
+        val rm = universe.runtimeMirror(getClass.getClassLoader)
+        val moduleReflection = rm.reflectModule(symbol.asModule)
+        val instanceMirror = mirror.reflect(moduleReflection.instance)
+        val classMirror = rm.reflectClass(instanceMirror.symbol)
+
+        scalaTypeToJavaType(classMirror.symbol.toType, mirror)
       }
       case _ => throw new UnsupportedOperationException(s"Could not convert scalaType $scalaType to a javaType: " + scalaType.dealias.getClass.getName)
     }
