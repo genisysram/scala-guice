@@ -76,6 +76,15 @@ class ScalaModuleSpec extends WordSpec with Matchers {
       Guice.createInjector(module).getInstance(classOf[A])
     }
 
+    "allow binding a container with a generic singleton type" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          bind[SealedTraitContainer[FinalSealedTrait.type]].toProvider[SealedTraitContainerFinalSealedTraitProvider]
+        }
+      }
+      Guice.createInjector(module).getInstance(classOf[A])
+    }
+
     "allow binding with annotation using a type parameter" in {
       import com.google.inject.name.Named
       val module = new AbstractModule with ScalaModule {

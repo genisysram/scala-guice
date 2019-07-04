@@ -83,3 +83,13 @@ class AOPI extends MethodInterceptor {
 }
 
 trait D
+
+sealed trait SealedTrait
+
+final case object FinalSealedTrait extends SealedTrait
+
+case class SealedTraitContainer[T <: SealedTrait](inner: T)
+
+class SealedTraitContainerFinalSealedTraitProvider extends javax.inject.Provider[SealedTraitContainer[FinalSealedTrait.type]] {
+  def get(): SealedTraitContainer[FinalSealedTrait.type] = SealedTraitContainer(FinalSealedTrait)
+}
