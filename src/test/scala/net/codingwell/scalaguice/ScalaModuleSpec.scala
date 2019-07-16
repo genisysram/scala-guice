@@ -82,7 +82,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
           bind[SealedTraitContainer[FinalSealedTrait.type]].toProvider[SealedTraitContainerFinalSealedTraitProvider]
         }
       }
-      Guice.createInjector(module).getInstance(classOf[A])
+      Guice.createInjector(module).getInstance(new Key[SealedTraitContainer[FinalSealedTrait.type]] {})
     }
 
     "allow binding with annotation using a type parameter" in {
