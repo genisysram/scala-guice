@@ -3,8 +3,6 @@ Scala extensions for Google Guice 4.2
 
 **Develop:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=develop)](https://travis-ci.org/codingwell/scala-guice)
 
-**Note: Multibinding behaviour had changed in beta4, duplicates are now ignored instead of throwing an exception.**
-
 Getting Started
 ---------------
 
@@ -16,18 +14,18 @@ We currently support Scala `2.11, 2.12, 2.13`
 <dependency>
     <groupId>net.codingwell</groupId>
     <artifactId>scala-guice_2.13</artifactId>
-    <version>4.2.6</version>
+    <version>4.2.7</version>
 </dependency>
 ```
 
 ##### sbt:
 ```scala
-"net.codingwell" %% "scala-guice" % "4.2.6"
+"net.codingwell" %% "scala-guice" % "4.2.7"
 ```
 
 ##### gradle:
 ```groovy
-'net.codingwell:scala-guice_2.13:4.2.6'
+'net.codingwell:scala-guice_2.13:4.2.7'
 ```
 
 ### Mixin
