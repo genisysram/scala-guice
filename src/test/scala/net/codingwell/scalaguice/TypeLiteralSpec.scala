@@ -85,7 +85,15 @@ class TypeLiteralSpec extends FunSpec with Matchers {
     }
 
     it("should handle type parameters that are arrays") {
-      typeLiteral[Array[Int]] shouldEqual new TypeLiteral[Array[java.lang.Integer]] {}
+      typeLiteral[Array[Int]] shouldEqual new TypeLiteral[Array[Int]] {}
+    }
+    
+    it("should handle type parameters that are boxed primative arrays") {
+      typeLiteral[Array[java.lang.Integer]] shouldEqual new TypeLiteral[Array[java.lang.Integer]] {}
+    }
+    
+    it("should handle Primative Arrays") {
+      typeLiteral[Option[Array[Byte]]] shouldEqual new TypeLiteral[Option[Array[Byte]]] {}
     }
 
     it("should create a type literal from a trait") {
@@ -103,6 +111,17 @@ class TypeLiteralSpec extends FunSpec with Matchers {
     it("should handle embedded wildcards with constraints") {
       typeLiteral[Option[_ <: Throwable]] shouldEqual new TypeLiteral[Option[_ <: Throwable]] {}
     }
-
+    
+    it("should handle Unit") {
+      typeLiteral[Unit] shouldEqual new TypeLiteral[Unit] {}
+    }
+    
+    it("Should handle unit as a generic") {
+      typeLiteral[Function0[Unit]] shouldEqual new TypeLiteral[Function0[Unit]] {}
+    }
+    
+    it("Should handle explicit function"){
+      typeLiteral[Function1[Function0[Unit],String]] shouldEqual new TypeLiteral[(=> Unit) => String] {}
+    }
   }
 }

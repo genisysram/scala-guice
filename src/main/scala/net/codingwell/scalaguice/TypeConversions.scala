@@ -55,18 +55,22 @@ private [scalaguice] object TypeConversions {
 
   }
 
-  def scalaTypeToJavaType(scalaType: ScalaType, mirror: Mirror): JavaType = {
+  def scalaTypeToJavaType(scalaType: ScalaType, mirror: Mirror, allowPrimative: Boolean = false): JavaType = {
     scalaType.dealias match {
       case `anyType` => classOf[java.lang.Object]
       case ExistentialType(symbols, underlying) => scalaTypeToJavaType(underlying, mirror)
-      case ArrayType(argType) => arrayOf(scalaTypeToJavaType(argType, mirror))
+      case ArrayType(argType) => arrayOf(scalaTypeToJavaType(argType, mirror, allowPrimative=true))
       case ClassType(symbol, args) => {
         val rawType = mirror.runtimeClass(symbol)
         val ownerType = findOwnerOf(symbol, mirror)
-        args.map(arg => scalaTypeToJavaType(arg, mirror)) match {
-          case Nil => toWrapper(rawType)
-          case mappedArgs if ownerType.nonEmpty => newParameterizedTypeWithOwner(ownerType.get, rawType, mappedArgs:_*)
-          case mappedArgs => newParameterizedType(rawType, mappedArgs:_*)
+        if(symbol == symbolOf[Unit]) {
+          classOf[scala.runtime.BoxedUnit]
+        } else {
+          args.map(arg => scalaTypeToJavaType(arg, mirror)) match {
+            case Nil => if(allowPrimative) rawType else toWrapper(rawType)
+            case mappedArgs if ownerType.nonEmpty => newParameterizedTypeWithOwner(ownerType.get, rawType, mappedArgs:_*)
+            case mappedArgs => newParameterizedType(rawType, mappedArgs:_*)
+          }
         }
       }
       case WildcardType(lowerBounds, upperBounds) => {

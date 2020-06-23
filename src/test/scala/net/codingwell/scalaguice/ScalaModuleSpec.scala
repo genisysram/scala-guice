@@ -145,6 +145,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     //This test needs work to resolve #65
     "allow binding by name to Unit" ignore {
+      try { 
       val foo:(=> Unit) => String = (a) => "dog"
       val module = new AbstractModule with ScalaModule {
         override def configure() = {
@@ -156,6 +157,9 @@ class ScalaModuleSpec extends WordSpec with Matchers {
       val injector = Guice.createInjector(module)
       val func = injector.instance[(=> Unit) => String]
       func shouldEqual foo
+      } catch {
+        case e: Throwable => { e.printStackTrace; throw e }
+      }
     }
 
 
