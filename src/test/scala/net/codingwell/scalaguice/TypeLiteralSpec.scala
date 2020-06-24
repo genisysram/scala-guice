@@ -15,7 +15,8 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.{Matchers, FunSpec}
+import net.codingwell.scalaguice.Testing.SomeClazzWithAugmentation
+import org.scalatest.{FunSpec, Matchers}
 
 class TypeLiteralSpec extends FunSpec with Matchers {
 
@@ -122,6 +123,15 @@ class TypeLiteralSpec extends FunSpec with Matchers {
     
     it("Should handle explicit function"){
       typeLiteral[Function1[Function0[Unit],String]] shouldEqual new TypeLiteral[(=> Unit) => String] {}
+    }
+
+    it("should handle complex type") {
+      typeLiteral[SomeClazz with Augmentation] shouldEqual new TypeLiteral[SomeClazz with Augmentation] {}
+    }
+
+    it("should handle complex type via type alias") {
+      typeLiteral[SomeClazzWithAugmentation] shouldEqual new TypeLiteral[SomeClazzWithAugmentation] {}
+      typeLiteral[SomeClazzWithAugmentation] shouldEqual new TypeLiteral[SomeClazz with Augmentation] {}
     }
   }
 }

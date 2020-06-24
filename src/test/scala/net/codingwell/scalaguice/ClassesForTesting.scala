@@ -93,3 +93,16 @@ case class SealedTraitContainer[T <: SealedTrait](inner: T)
 class SealedTraitContainerFinalSealedTraitProvider extends javax.inject.Provider[SealedTraitContainer[FinalSealedTrait.type]] {
   def get(): SealedTraitContainer[FinalSealedTrait.type] = SealedTraitContainer(FinalSealedTrait)
 }
+
+class SomeClazz {
+  protected val underlying: String = "String"
+  def get: String = underlying
+}
+
+trait Augmentation { self: SomeClazz =>
+  override def get: String = s"${self.underlying} with trait augmentation"
+}
+
+object Testing {
+  type SomeClazzWithAugmentation = SomeClazz with Augmentation
+}
