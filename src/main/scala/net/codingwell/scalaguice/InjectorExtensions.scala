@@ -23,14 +23,14 @@ import scala.reflect.runtime.universe._
 
 object InjectorExtensions {
 
-  implicit class ScalaInjector(i: Injector) {
-    def instance[T: TypeTag] = i.getInstance(typeLiteral[T].toKey)
-    def instance[T: TypeTag](ann: Annotation) = i.getInstance(typeLiteral[T].annotatedWith(ann))
-    def instance[T: TypeTag, Ann <: Annotation : ClassTag] = i.getInstance(typeLiteral[T].annotatedWith[Ann])
+  implicit class ScalaInjector(val self: Injector) extends AnyVal {
+    def instance[T: TypeTag]: T = self.getInstance(typeLiteral[T].toKey)
+    def instance[T: TypeTag](ann: Annotation): T = self.getInstance(typeLiteral[T].annotatedWith(ann))
+    def instance[T: TypeTag, Ann <: Annotation : ClassTag]: T = self.getInstance(typeLiteral[T].annotatedWith[Ann])
 
     def existingBinding[T: TypeTag]: Option[Binding[T]] = existingBinding(typeLiteral[T].toKey)
     def existingBinding[T: TypeTag](ann: Annotation): Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith(ann))
     def existingBinding[T: TypeTag, Ann <: Annotation : ClassTag]: Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith[Ann])
-    def existingBinding[T](key: Key[T]): Option[Binding[T]] = Option(i.getExistingBinding(key))
+    def existingBinding[T](key: Key[T]): Option[Binding[T]] = Option(self.getExistingBinding(key))
   }
 }
