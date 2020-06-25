@@ -144,7 +144,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
     }
 
     //This test needs work to resolve #65
-    "allow binding by name to Unit" ignore {
+    "allow binding by name to Unit" in {
       try { 
       val foo:(=> Unit) => String = (a) => "dog"
       val module = new AbstractModule with ScalaModule {

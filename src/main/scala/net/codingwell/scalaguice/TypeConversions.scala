@@ -62,7 +62,9 @@ private [scalaguice] object TypeConversions {
       case ExistentialType(_, underlying) => scalaTypeToJavaType(underlying, mirror)
       case ArrayType(argType) => arrayOf(scalaTypeToJavaType(argType, mirror, allowPrimative=true))
       case ClassType(symbol, args) => {
-        val rawType = mirror.runtimeClass(symbol)
+        //You would think `symbol` would be sufficient but in some cases (such as (=> Unit)) instead of
+        //resolving to `Function0[Unit]` You get Scala<byname> which isn't real and can't be located
+        val rawType = mirror.runtimeClass(scalaType.erasure.dealias.typeSymbol.asInstanceOf[ClassSymbol])
         val ownerType = findOwnerOf(symbol, mirror)
         if(symbol == symbolOf[Unit]) {
           classOf[scala.runtime.BoxedUnit]
