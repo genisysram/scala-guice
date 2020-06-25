@@ -31,6 +31,7 @@ private [scalaguice] object TypeConversions {
     def unapply(tpe: ScalaType): Option[(ClassSymbol, Seq[ScalaType])] = {
       tpe match {
         case TypeRef(pre, sym, args) if sym.isClass => Some((sym.asClass, args))
+        case RefinedType(_, _) => unapply(tpe.erasure)
         case _ => None
       }
 
@@ -58,7 +59,7 @@ private [scalaguice] object TypeConversions {
   def scalaTypeToJavaType(scalaType: ScalaType, mirror: Mirror, allowPrimative: Boolean = false): JavaType = {
     scalaType.dealias match {
       case `anyType` => classOf[java.lang.Object]
-      case ExistentialType(symbols, underlying) => scalaTypeToJavaType(underlying, mirror)
+      case ExistentialType(_, underlying) => scalaTypeToJavaType(underlying, mirror)
       case ArrayType(argType) => arrayOf(scalaTypeToJavaType(argType, mirror, allowPrimative=true))
       case ClassType(symbol, args) => {
         val rawType = mirror.runtimeClass(symbol)

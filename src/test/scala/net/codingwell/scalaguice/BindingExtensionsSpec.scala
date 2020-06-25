@@ -68,5 +68,19 @@ class BindingExtensionsSpec extends WordSpec with Matchers {
       } getInstance new Key[Gen[String]] {}
       inst.get should equal ("String")
     }
+
+    "allow binding complex type" in {
+      val inst = Guice createInjector module { binder =>
+        binder.bindType[SomeClazz with Augmentation].toInstance(new SomeClazz with Augmentation)
+      } getInstance classOf[SomeClazz]
+      inst.get should equal("String with trait augmentation")
+    }
+
+    "allow binding complex type with type alias" in {
+      val inst = Guice createInjector module { binder =>
+        binder.bindType[Testing.SomeClazzWithAugmentation].toInstance(new SomeClazz with Augmentation)
+      } getInstance classOf[SomeClazz]
+      inst.get should equal("String with trait augmentation")
+    }
   }
 }
