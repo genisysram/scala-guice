@@ -1,8 +1,17 @@
+4.2.9
+-----
+2020-06-24
+
+* Fix Mixins not resolving to the base types (as they did in 4.2.0)
+* Add `annotatedWith` that takes a class object
+* Fix `(=> Unit)` throwing an exception about being unable to find `<byname>`
+
 4.2.8
 -----
 2020-06-22
 
 * Fix primative arrays
+* Fix Unit
 
 4.2.7
 -----
