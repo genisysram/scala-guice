@@ -236,10 +236,19 @@ bindInterceptor[LoggingInterceptor](methodMatcher = annotatedWith[Logging])
 
 ## Gotchas
 
+### Reserved Words
+
 In Scala, the words `override` and `with` are reserved and must be escaped to be used.
 ```scala
 Modules.`override`(new BaseModule).`with`(new TestModule)
 ```
+
+### Mixins
+
+To our knowledge there is no way to represent a Mixin `A with B` in Google Guice.
+Guice sees a mixin as its base type and therefore `A with B` is equivalent to `A`.
+This means only one can be bound in the injector.
+It is also possible to try to inject `A` where `A with B` is expected, most likely resulting in a `ClassCastException`.
 
 ### And the stuff we forgot...
 
