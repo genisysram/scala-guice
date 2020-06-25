@@ -22,10 +22,11 @@ import scala.reflect.ClassTag
 
 object KeyExtensions {
 
-  implicit class ScalaTypeLiteral[T](t: TypeLiteral[T]) {
-    def toKey: Key[T] = Key.get(t)
-    def annotatedWith(annotation: JAnnotation): Key[T] = Key.get(t, annotation)
-    def annotatedWith[TAnn <: JAnnotation : ClassTag]: Key[T] = Key.get(t, cls[TAnn])
-    def annotatedWithName(name: String) = annotatedWith(Names.named(name))
+  implicit class ScalaTypeLiteral[T](val self: TypeLiteral[T]) extends AnyVal {
+    def toKey: Key[T] = Key.get(self)
+    def annotatedWith(annotation: JAnnotation): Key[T] = Key.get(self, annotation)
+    def annotatedWith(clazz: Class[_ <: JAnnotation]): Key[T] = Key.get(self, clazz)
+    def annotatedWith[TAnn <: JAnnotation: ClassTag]: Key[T] = Key.get(self, cls[TAnn])
+    def annotatedWithName(name: String): Key[T] = annotatedWith(Names.named(name))
   }
 }

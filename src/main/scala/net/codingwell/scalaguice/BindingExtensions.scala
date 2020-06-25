@@ -26,9 +26,9 @@ import javax.inject.Provider
 
 /**
  * Extensions for Guice's binding DSL.
- * These allow using a type parameter instead of <code>classOf[Foo]}</code>
- * or <code>new TypeLiteral[Bar[Foo]] {}</code>. The extra methods are
- * named as those in the normal binding DSL suffixed with <code>Type</code>.
+ * These allow using a type parameter instead of `classOf[Foo]`
+ * or `new TypeLiteral[Bar[Foo]] {}`. The extra methods are
+ * named as those in the normal binding DSL suffixed with `Type`.
  *
  * For example, instead of
  * {{{
@@ -46,31 +46,31 @@ import javax.inject.Provider
  */
 object BindingExtensions {
 
-  implicit class ScalaBinder(b: Binder) {
-    def bindType[T: TypeTag]: AnnotatedBindingBuilder[T] = b bind typeLiteral[T]
+  implicit class ScalaBinder(val self: Binder) extends AnyVal {
+    def bindType[T: TypeTag]: AnnotatedBindingBuilder[T] = self.bind(typeLiteral[T])
   }
 
-  implicit class ScalaScopedBindingBuilder(b: ScopedBindingBuilder) {
-    def inType[TAnn <: JAnnotation : ClassTag]() = b in cls[TAnn]
+  implicit class ScalaScopedBindingBuilder(val self: ScopedBindingBuilder) extends AnyVal {
+    def inType[TAnn <: JAnnotation : ClassTag](): Unit = self.in(cls[TAnn])
   }
 
-  implicit class ScalaLinkedBindingBuilder[T](b: LinkedBindingBuilder[T]) {
-    def toType[TImpl <: T : TypeTag] = b to typeLiteral[TImpl]
+  implicit class ScalaLinkedBindingBuilder[T](val self: LinkedBindingBuilder[T]) extends AnyVal {
+    def toType[TImpl <: T : TypeTag]: ScopedBindingBuilder = self.to(typeLiteral[TImpl])
 
-    def toProviderType[TProvider <: Provider[_ <: T] : ClassTag] = b toProvider cls[TProvider]
+    def toProviderType[TProvider <: Provider[_ <: T] : ClassTag]: ScopedBindingBuilder = self.toProvider(cls[TProvider])
   }
 
-  implicit class ScalaAnnotatedBindingBuilder[T](b: AnnotatedBindingBuilder[T]) {
-    def annotatedWithType[TAnn <: JAnnotation : ClassTag] = b annotatedWith cls[TAnn]
+  implicit class ScalaAnnotatedBindingBuilder[T](val self: AnnotatedBindingBuilder[T]) extends AnyVal {
+    def annotatedWithType[TAnn <: JAnnotation : ClassTag]: LinkedBindingBuilder[T] = self.annotatedWith(cls[TAnn])
   }
 
-  implicit class ScalaAnnotatedConstantBindingBuilder(b: AnnotatedConstantBindingBuilder) {
-    def annotatedWithType[TAnn <: JAnnotation : ClassTag] = b annotatedWith cls[TAnn]
-    def annotatedWithName(name: String) = b annotatedWith Names.named(name)
+  implicit class ScalaAnnotatedConstantBindingBuilder(val self: AnnotatedConstantBindingBuilder) extends AnyVal {
+    def annotatedWithType[TAnn <: JAnnotation : ClassTag]: ConstantBindingBuilder = self.annotatedWith(cls[TAnn])
+    def annotatedWithName(name: String): ConstantBindingBuilder = self.annotatedWith(Names.named(name))
   }
 
-  implicit class ScalaConstantBindingBuilder(b: ConstantBindingBuilder) {
-    def to[T: ClassTag]() = b to cls[T]
+  implicit class ScalaConstantBindingBuilder(val self: ConstantBindingBuilder) extends AnyVal {
+    def to[T: ClassTag](): Unit = self.to(cls[T])
   }
 }
 
