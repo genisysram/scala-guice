@@ -15,7 +15,7 @@
  */
 package net.codingwell.scalaguice
 
-import com.google.inject.{Binding, Key, Injector}
+import com.google.inject.{Binding, Injector, Key, Provider}
 import java.lang.annotation.Annotation
 import KeyExtensions._
 import scala.reflect.ClassTag
@@ -32,5 +32,9 @@ object InjectorExtensions {
     def existingBinding[T: TypeTag](ann: Annotation): Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith(ann))
     def existingBinding[T: TypeTag, Ann <: Annotation : ClassTag]: Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith[Ann])
     def existingBinding[T](key: Key[T]): Option[Binding[T]] = Option(self.getExistingBinding(key))
+
+    def provider[T: TypeTag]: Provider[T] = self.getProvider(typeLiteral[T].toKey)
+    def provider[T: TypeTag](ann: Annotation): Provider[T] = self.getProvider(typeLiteral[T].annotatedWith(ann))
+    def provider[T: TypeTag, Ann <: Annotation : ClassTag]: Provider[T] = self.getProvider(typeLiteral[T].annotatedWith[Ann])
   }
 }
