@@ -133,5 +133,9 @@ class TypeLiteralSpec extends FunSpec with Matchers {
       typeLiteral[SomeClazzWithAugmentation] shouldEqual new TypeLiteral[SomeClazzWithAugmentation] {}
       typeLiteral[SomeClazzWithAugmentation] shouldEqual new TypeLiteral[SomeClazz with Augmentation] {}
     }
+    
+    it("should handle anyval") {
+      typeLiteral[LongAnyVal] shouldEqual new TypeLiteral[LongAnyVal] {}
+    }
   }
 }

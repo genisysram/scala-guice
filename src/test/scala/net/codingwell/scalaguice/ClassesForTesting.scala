@@ -106,3 +106,5 @@ trait Augmentation { self: SomeClazz =>
 object Testing {
   type SomeClazzWithAugmentation = SomeClazz with Augmentation
 }
+
+case class LongAnyVal(id: Long) extends AnyVal
