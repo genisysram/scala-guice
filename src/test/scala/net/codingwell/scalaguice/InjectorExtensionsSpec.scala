@@ -48,11 +48,11 @@ class InjectorExtensionsSpec extends WordSpec with Matchers {
       inst.get should equal("String")
     }
 
-    "allow instance to be retreived using a type parameter and an annotation" in {
+    "allow instance to be retrieved using a type parameter and an annotation" in {
       injector.instance[A](named("d"))
     }
 
-    "allow instance to be retreived using a type parameter and an annotation class" in {
+    "allow instance to be retrieved using a type parameter and an annotation class" in {
       injector.instance[B, Named]
     }
 
@@ -94,6 +94,23 @@ class InjectorExtensionsSpec extends WordSpec with Matchers {
 
     "allow missing bindings to be retrieved by key optionally" in {
       injector.existingBinding[A](keyMissingFn[A]) should not be defined
+    }
+
+    "allow provider to be retrieved using a type parameter" in {
+      injector.provider[A]
+    }
+
+    "allow generic provider to be retrieved using a type parameter" in {
+      val inst = injector.provider[Gen[String]]
+      inst.get.get should equal("String")
+    }
+
+    "allow provider to be retrieved using a type parameter and an annotation" in {
+      injector.provider[A](named("d"))
+    }
+
+    "allow provider to be retrieved using a type parameter and an annotation class" in {
+      injector.provider[B, Named]
     }
   }
 }
