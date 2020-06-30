@@ -111,6 +111,25 @@ bind[A].to[B].in[Singleton]
 bindInterceptor[AOPI](methodMatcher = annotatedWith[AOP])
 ```
 
+### Injector Extensions
+
+```scala
+import net.codingwell.scalaguice.InjectorExtensions._
+
+injector.instance[A]
+injector.instance[A, Ann]
+injector.instance[A]( Names.named("name") )
+
+injector.provider[A]
+injector.provider[A, Ann]
+injector.provider[A]( Names.named("name") )
+
+//Returns Option[A]
+injector.existingBinding[A]
+injector.existingBinding[A, Ann]
+injector.existingBinding[A]( Names.named("name") )
+```
+
 ### Multibinding
 
 The ScalaMultibinder adds scala style multibindings:
