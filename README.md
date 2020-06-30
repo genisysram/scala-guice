@@ -100,6 +100,7 @@ bind[A].to(classOf[B])
 bind[A].to(typeLiteral[B])
 bind[A].toInstance("A")
 bind[A].annotatedWith[Ann].to[B]
+bind[A].annotatedWith( classOf[Ann] ).to[B]
 bind[A].annotatedWith( Names.named("name") ).to[B]
 bind[A].annotatedWithName("name").to[B]
 bind[A].toProvider[BProvider]
