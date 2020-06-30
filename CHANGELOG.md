@@ -1,3 +1,10 @@
+4.2.10
+------
+2020-06-29
+
+* Fix AnyVal types being erased to the type they wrap
+* Add provider helpers to the injector extensions
+
 4.2.9
 -----
 2020-06-24
