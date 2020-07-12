@@ -1,3 +1,9 @@
+4.2.11
+------
+2020-07-12
+
+* Resolve inability to find owner causing nested class to not be bindable
+
 4.2.10
 ------
 2020-06-29
