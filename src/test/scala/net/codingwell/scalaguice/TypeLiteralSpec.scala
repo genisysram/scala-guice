@@ -137,5 +137,9 @@ class TypeLiteralSpec extends FunSpec with Matchers {
     it("should handle anyval") {
       typeLiteral[LongAnyVal] shouldEqual new TypeLiteral[LongAnyVal] {}
     }
+    
+    it("should handle deep nested static class") {
+      typeLiteral[DeepInterface.Bar.Foo] shouldEqual new TypeLiteral[DeepInterface.Bar.Foo] {}
+    }
   }
 }

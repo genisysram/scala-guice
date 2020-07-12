@@ -103,7 +103,11 @@ private [scalaguice] object TypeConversions {
       val clazz = mirror.staticClass(owner.asClass.fullName)
       Some(mirror.runtimeClass(clazz))
     } else if (!owner.isPackage && owner.isClass) {
-      Some(mirror.runtimeClass(owner.asClass))
+      try {
+        Some(mirror.runtimeClass(owner.asClass))
+      } catch {
+        case _:ClassNotFoundException => None
+      }
     } else {
       None
     }
